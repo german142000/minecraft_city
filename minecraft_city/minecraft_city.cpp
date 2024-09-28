@@ -6,6 +6,8 @@
 
 #pragma comment(lib, "glew/lib/Release/x64/glew32.lib")
 
+HDC phdc;
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -125,6 +127,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
+    phdc = GetDC(hWnd);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
     MSG msg = {};
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
@@ -142,6 +148,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         PostQuitMessage(0);
         return 0;
         break;
+    case WM_PAINT:
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        SwapBuffers(phdc);
+        return 0;
+    }
+    break;
     default:
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
