@@ -1,7 +1,8 @@
-﻿// minecraft_city.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-//
-
-#include <iostream>
+﻿#include <iostream>
+#include <windows.h>
+#include "glew/include/GL/glew.h"
+#include <gl/GL.h>
+#include "GL/wglext.h" //Этот файл распространяется вне Windows SDK, поэтому его необходимо скачивать с сайта khronos.org
 
 int main()
 {
