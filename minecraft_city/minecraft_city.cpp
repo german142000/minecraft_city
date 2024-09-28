@@ -8,14 +8,14 @@
 #pragma comment(lib, "glew/lib/Release/x64/glew32.lib")
 
 #include "ResourcePack.h"
-#include "Cube.h"
+#include "Texture.h"
 
 using namespace std;
 
 HDC phdc;
 
 vector<ResourcePack> resourcePacks;
-vector<Cube> cubes;
+vector <Texture> textures;
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
