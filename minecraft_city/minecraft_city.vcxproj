@@ -130,6 +130,9 @@
   <ItemGroup>
     <ClCompile Include="minecraft_city.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cube.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
