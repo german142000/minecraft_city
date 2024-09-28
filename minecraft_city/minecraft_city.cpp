@@ -3,10 +3,20 @@
 #include "glew/include/GL/glew.h"
 #include <gl/GL.h>
 #include "GL/wglext.h" //Этот файл распространяется вне Windows SDK, поэтому его необходимо скачивать с сайта khronos.org
+#include <vector>
 
 #pragma comment(lib, "glew/lib/Release/x64/glew32.lib")
 
+#include "ResourcePack.h"
+#include "Cube.h"
+
+using namespace std;
+
 HDC phdc;
+
+vector<ResourcePack> resourcePacks;
+vector<Cube> cubes;
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
