@@ -4,15 +4,14 @@
 #include <gl/GL.h>
 #include "GL/wglext.h" //Этот файл распространяется вне Windows SDK, поэтому его необходимо скачивать с сайта khronos.org
 #include <vector>
-
-#include <Awesomium/WebCore.h>
-#include <Awesomium/STLHelpers.h>
+#include <thread>
 
 #pragma comment(lib, "glew/lib/Release/Win32/glew32.lib")
-#pragma comment(lib, "C:/Program Files (x86)/Awesomium Technologies LLC/Awesomium SDK/1.7.5.1/build/lib/awesomium.lib")
 
 #include "ResourcePack.h"
 #include "Texture.h"
+
+#include "UI.h"
 
 using namespace std;
 
@@ -21,12 +20,9 @@ HDC phdc;
 vector<ResourcePack> resourcePacks;
 vector <Texture> textures;
 
-Awesomium::WebCore* core = 0;
-Awesomium::WebView* view = 0;
-
+//UI ui = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK bWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     HMODULE hLib;
@@ -69,55 +65,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         MessageBox(NULL, "Window Creation Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
         return 0;
     }
-
-    const char* bclassName = "bOpenGLAppClass";
-    const char* bwindowTitle = "bOpenGL";
-    const int bscreenWidth = 800;
-    const int bscreenHeight = 600;
-
-    WNDCLASS bwc = {};
-    bwc.lpfnWndProc = WndProc;
-    bwc.hInstance = hInstance;
-    bwc.lpszClassName = bclassName;
-    bwc.hbrBackground = (HBRUSH)(COLOR_BACKGROUND);
-
-    if (!RegisterClass(&bwc)) {
-        MessageBox(NULL, "Window Registration Failed!", "Error!", MB_ICONEXCLAMATION | MB_OK);
-        return 0;
-    }
-
-    HWND bhWnd = CreateWindowEx(
-        WS_EX_APPWINDOW,
-        bclassName,
-        bwindowTitle,
-        WS_VISIBLE | WS_CHILD,
-        2,
-        2,
-        bscreenWidth,
-        bscreenHeight,
-        hWnd,
-        NULL,
-        hInstance,
-        NULL);
-
-    Awesomium::WebConfig config;
-    core = Awesomium::WebCore::Initialize(config);
-
-    Awesomium::WebPreferences prefs;
-    Awesomium::WebSession* session = core->CreateWebSession(Awesomium::WSLit(""), prefs);
-
-    view = core->CreateWebView(800, 600, session, Awesomium::WebViewType::kWebViewType_Window);
-    view->set_parent_window(bhWnd);
-
-    UINT myTimer = SetTimer(bhWnd, 0, 15, NULL);
-
-    view->LoadURL(Awesomium::WebURL(Awesomium::WSLit("http://google.com/")));
-    while (view->IsLoading())
-    {
-        Sleep(50);
-        core->Update();
-    }
-    view->Focus();
 
     HDC hdc = GetDC(hWnd);
 
@@ -208,11 +155,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 }
 
 void closeApp() {
-    view->Stop();
-    //view->session()->Release();
-    view->Destroy();
-    core->Update();
-    core->Shutdown();
+    //DestroyWindow(ui.getHWND());    
     PostQuitMessage(0);
 }
 
@@ -228,19 +171,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
         break;
     case WM_PAINT:
     {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        SwapBuffers(phdc);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //SwapBuffers(phdc);
         return 0;
     }
     break;
-    case WM_TIMER:
+    case WM_CREATE:
     {
-        if (core){
-            core->Update();
-        }
+        std::thread t1([&]() {
+            UI ui(hWnd);
+        });
+        t1.detach();
     }
+    break;
     default:
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
     return 0;
 }
+
