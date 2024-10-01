@@ -20,11 +20,22 @@ HDC phdc;
 vector<ResourcePack> resourcePacks;
 vector <Texture> textures;
 
+HINSTANCE inst;
+
+//Общение потоков
+bool readUIThread = true;
+bool readOpenGLThread = false;
+
+HWND UIhWnd = NULL;
+// -------------------------------------------
 //UI ui = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+
+    inst = hInstance;
+
     HMODULE hLib;
     void (*dpi)();
     hLib = LoadLibrary("User32.dll");
@@ -51,7 +62,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         WS_EX_APPWINDOW,
         className,
         windowTitle,
-        WS_VISIBLE | WS_OVERLAPPEDWINDOW,
+        WS_VISIBLE | WS_POPUP | WS_MAXIMIZE,
         2,
         2,
         screenWidth,
@@ -143,10 +154,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     phdc = GetDC(hWnd);
     glEnable(GL_DEPTH_TEST);
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 
     MSG msg = {};
     while (GetMessage(&msg, NULL, 0, 0)) {
+        if (!readUIThread) {
+            readOpenGLThread = true;
+            //if(UIShow) SetWindowPos(mainUi->getHWND(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+            readOpenGLThread = false;
+        }
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
@@ -154,32 +170,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 0;
 }
 
-void closeApp() {
-    //DestroyWindow(ui.getHWND());    
+void closeApp(HWND hWnd) {
+    DestroyWindow(UIhWnd);
     PostQuitMessage(0);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     case WM_CLOSE:
-        closeApp();
+        closeApp(hWnd);
         return 0;
         break;
     case WM_DESTROY:
-        closeApp();
+        closeApp(hWnd);
         return 0;
         break;
     case WM_PAINT:
     {
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //SwapBuffers(phdc);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        SwapBuffers(phdc);
         return 0;
     }
     break;
     case WM_CREATE:
     {
+        EnableWindow(hWnd, false);        
         std::thread t1([&]() {
-            UI ui(hWnd);
+            UI ui(hWnd, inst);
+            //SetWindowPos(ui.getHWND(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
         });
         t1.detach();
     }

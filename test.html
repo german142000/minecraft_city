@@ -10,11 +10,35 @@
     <meta property="og:description" content="Описание страницы в OG">
     <meta property="og:image" content="https://example.com/image.jpg">
     <meta property="og:url" content="https://example.com/">
+	<style>
+		p {
+			background: #eee;
+			display: inline-block;
+		}
+		
+		h2 {
+			background: #eee;
+			display: inline-block;
+		}
+		
+		#closeButton {
+			display: inline-block;
+			padding: 15px;
+			background: #eee;
+			border: solid #000 1px;
+			transition-duration: 0.5s;
+		}
+		
+		#closeButton:hover {
+			background: #fff;
+		}
+	</style>
   </head>
-  <body>
+  <body style="background: #00FF00; font-family: arial">
+	<div id="closeButton">Закрыть движок</div><br>
     <header>
-      <h1>Личный сайт</h1>
-      <p>Который сделан на основе готового шаблона</p>
+      <h1>Личный сайт</h1><br>
+      <p>Который сделан на основе готового шаблона</p><br>
       <nav>
         <ul>
           <li><a href="index.html">Эта страница</a></li>
@@ -25,23 +49,23 @@
     <main>
       <article>
         <section>
-          <h2>Первая секция</h2>
-          <p>Она обо мне</p>
-          <img src="images/image.png" alt="Человек и пароход">
-          <p>Но может быть и о семантике, я пока не решил.</p>
+          <h2>Первая секция</h2><br>
+          <p>Она обо мне</p><br>
+          <img src="images/image.png" alt="Человек и пароход"><br>
+          <p>Но может быть и о семантике, я пока не решил.</p><br>
         </section>
         <section>
-          <h2>Вторая секция</h2>
-          <p>Она тоже обо мне</p>
+          <h2>Вторая секция</h2><br>
+          <p>Она тоже обо мне</p><br>
         </section>
         <section>
-          <h2>И третья</h2>
-          <p>Вы уже должны были начать догадываться.</p>
+          <h2>И третья</h2><br>
+          <p>Вы уже должны были начать догадываться.</p><br>
         </section>
       </article>
     </main>
     <footer>
-      <p>Сюда бы я вписал информацию об авторе и ссылки на другие сайты</p>
+      <p>Сюда бы я вписал информацию об авторе и ссылки на другие сайты</p><br>
     </footer>
     <!-- сюда можно подключить jquery <script src="scripts/app.js" defer></script> -->
   </body>
