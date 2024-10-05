@@ -27,10 +27,16 @@ bool readUIThread = true;
 bool readOpenGLThread = false;
 
 HWND UIhWnd = NULL;
+bool closeEngine = false;
 // -------------------------------------------
 //UI ui = 0;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+void closeApp() {
+    DestroyWindow(UIhWnd);
+    PostQuitMessage(0);
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
@@ -160,7 +166,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     while (GetMessage(&msg, NULL, 0, 0)) {
         if (!readUIThread) {
             readOpenGLThread = true;
-            //if(UIShow) SetWindowPos(mainUi->getHWND(), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+            if(closeEngine) closeApp();
             readOpenGLThread = false;
         }
         TranslateMessage(&msg);
@@ -170,19 +176,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return 0;
 }
 
-void closeApp(HWND hWnd) {
-    DestroyWindow(UIhWnd);
-    PostQuitMessage(0);
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
     case WM_CLOSE:
-        closeApp(hWnd);
+        closeApp();
         return 0;
         break;
     case WM_DESTROY:
-        closeApp(hWnd);
+        closeApp();
         return 0;
         break;
     case WM_PAINT:

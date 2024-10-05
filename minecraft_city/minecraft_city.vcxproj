@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cube.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="ResourcePack.h" />

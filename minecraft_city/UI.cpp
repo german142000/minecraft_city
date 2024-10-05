@@ -64,11 +64,25 @@ UI::UI(HWND hWnd, HINSTANCE inst) {
 
     UINT myTimer = SetTimer(this->ghWnd, 0, 15, NULL);
 
+    Awesomium::JSValue result = view->CreateGlobalJavascriptObject(Awesomium::WSLit("tunnel"));
+    Awesomium::JSObject& tunnel = result.ToObject();
+    tunnel.SetProperty(Awesomium::WSLit("exit"), Awesomium::WSLit("n"));
+
+    //view->inj
+
     view->LoadURL(Awesomium::WebURL(Awesomium::WSLit("file:///F:/minecraft_city/test.html")));
     view->Focus();
 
     MSG msg = {};
     while (GetMessage(&msg, NULL, 0, 0)) {
+        if (!readOpenGLThread) {
+            readUIThread = true;
+            if (this->getKeyValueFromTunnel("exit", tunnel) == L"y") {
+                closeEngine = true;
+                MessageBox(NULL, "Close", "Error!", MB_ICONEXCLAMATION | MB_OK);
+            }
+            readUIThread = false;
+        }
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
@@ -77,6 +91,10 @@ UI::UI(HWND hWnd, HINSTANCE inst) {
 HWND UI::getHWND() {
     return this->ghWnd;
 }
+
+wchar_t* UI::getKeyValueFromTunnel(std::string key, Awesomium::JSObject& tunnel) {
+    return (wchar_t*)tunnel.GetProperty(Awesomium::WSLit(key.c_str())).ToString().data();
+};
 
 LRESULT CALLBACK gWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {

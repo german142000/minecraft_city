@@ -5,11 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заголовок страницы</title>
     <link rel="stylesheet" href="./styles/style.css">
-
-    <meta property="og:title" content="Заголовок страницы в OG">
-    <meta property="og:description" content="Описание страницы в OG">
-    <meta property="og:image" content="https://example.com/image.jpg">
-    <meta property="og:url" content="https://example.com/">
 	<style>
 		p {
 			background: #eee;
@@ -26,16 +21,16 @@
 			padding: 15px;
 			background: #eee;
 			border: solid #000 1px;
-			transition-duration: 0.5s;
+			-webkit-transition: all 1s;
 		}
 		
 		#closeButton:hover {
-			background: #fff;
+			background: #ff0000;
 		}
 	</style>
   </head>
   <body style="background: #00FF00; font-family: arial">
-	<div id="closeButton">Закрыть движок</div><br>
+	<div id="closeButton" onclick="exit(this)">Закрыть движок</div><br>
     <header>
       <h1>Личный сайт</h1><br>
       <p>Который сделан на основе готового шаблона</p><br>
@@ -67,6 +62,11 @@
     <footer>
       <p>Сюда бы я вписал информацию об авторе и ссылки на другие сайты</p><br>
     </footer>
-    <!-- сюда можно подключить jquery <script src="scripts/app.js" defer></script> -->
+    <script>
+        function exit(dv) {
+            dv.style.background = "#000";
+            tunnel.exit = "y";
+        }
+    </script>
   </body>
 </html>
